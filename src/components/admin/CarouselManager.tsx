@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 
 type Item = { id: number; url: string; title?: string | null; subtitle?: string | null; order_index?: number };
 
@@ -272,7 +273,7 @@ export default function CarouselManager() {
           {items.map((it) => (
             <div key={it.id} className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden transition-all duration-700 hover:shadow-3xl hover:-translate-y-2 group">
               <div className="relative overflow-hidden">
-                <img src={it.url} alt={it.title || 'carousel'} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
+                <Image src={it.url} alt={it.title || 'carousel'} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 right-4">
                   <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-slate-700">
                     Order: {it.order_index ?? 0}

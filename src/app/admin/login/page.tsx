@@ -2,6 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function AdminLogin() {
     e.preventDefault();
     setErr(null);
     setLoading(true);
-    
+  
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -21,19 +22,28 @@ export default function AdminLogin() {
         body: JSON.stringify(form),
         credentials: 'include',
       });
-      
-      // Check if we got a valid response
+  
+      // Check if server is unreachable
       if (res.status === 0) {
-        setErr('Server is not running. Please start the development server with "npm run dev"');
+        setErr(
+          'Server is not running. Please start the development server with "npm run dev"'
+        );
         setLoading(false);
         return;
       }
+  
+      type ApiResponse = {
+        error?: string;
+        message?: string;
+        token?: string;
+      };
       
-      let data = {};
+  
+      let data: ApiResponse = {};
       try {
         const text = await res.text();
         if (text) {
-          data = JSON.parse(text);
+          data = JSON.parse(text) as ApiResponse;
         }
       } catch (jsonError) {
         console.error('JSON parse error:', jsonError);
@@ -41,26 +51,25 @@ export default function AdminLogin() {
         setLoading(false);
         return;
       }
-      
+  
       if (!res.ok) {
         setErr(data.error || 'Login failed');
         setLoading(false);
         return;
       }
-      
+  
       console.log('Login successful');
       // Add a small delay to show success state
       setTimeout(() => {
         router.push('/admin');
       }, 500);
-      
     } catch (error) {
       console.error('Login error:', error);
       setErr('Network error. Please try again.');
       setLoading(false);
     }
   };
-
+  
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background Elements */}
@@ -157,7 +166,7 @@ export default function AdminLogin() {
         
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <a 
+          <Link
             href="/" 
             className="inline-flex items-center space-x-2 text-slate-600 hover:text-blue-600 transition-colors duration-300 group"
           >
@@ -165,7 +174,7 @@ export default function AdminLogin() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             <span>Back to Home</span>
-          </a>
+          </Link>
         </div>
       </div>
     </main>
