@@ -61,7 +61,7 @@ export default function RootLayout({
                   </p>
                 </div>
               </Link>
-              import Link from "next/link";
+             
               <nav className="hidden lg:flex items-center space-x-10">
                 <Link
                   href="#about"
